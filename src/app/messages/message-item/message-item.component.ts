@@ -1,5 +1,7 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { NgForOf } from "@angular/common";
+import { ContactService } from "../../contacts/contact.service";
+import { Contacts } from "../../contacts/contacts.model";
 import { Message } from "../message.model";
 
 @Component({
@@ -11,9 +13,17 @@ import { Message } from "../message.model";
 })
 export class MessageItemComponent {
   @Input() message!: Message;
-  @Output() msgSelected = new EventEmitter();
+  messageSender!: string;
 
-  onSelected() {
-    this.msgSelected.emit();
+  constructor(private contactService: ContactService) { }
+
+  ngOnInit() {
+    const contact: Contacts | null = this.contactService.getContact(this.message.sender);
+
+    if (contact) {
+      this.messageSender = contact.name;
+    } else {
+      this.messageSender = 'Unknown';
+    }
   }
 }

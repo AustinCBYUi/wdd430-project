@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {MessageItemComponent} from "../message-item/message-item.component";
 import {MessageEditComponent} from "../message-edit/message-edit.component";
 import { Message } from "../message.model";
+import { MessagesService } from "../messages.service";
 import {NgForOf} from "@angular/common";
 
 @Component({
@@ -16,12 +17,15 @@ import {NgForOf} from "@angular/common";
   styleUrl: './message-list.component.css'
 })
 export class MessageListComponent {
-  messages: Message[] = [
-    new Message('1', 'Hello', 'This is a test message', 'David'),
-    new Message('2', 'Reminder!!', 'Make sure to complete your work early!', 'Austin')
-  ];
+  messages: Message[] = [];
 
-  onAddMessage(message: Message) {
-    this.messages.push(message);
+  constructor(private messageService: MessagesService) { }
+
+  ngOnInit() {
+    this.messages = this.messageService.getMessages();
+
+    this.messageService.messageChangedEvent.subscribe((messages: Message[]) => {
+      this.messages = messages;
+    })
   }
 }

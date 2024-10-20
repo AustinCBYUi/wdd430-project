@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {DocumentListComponent} from "./document-list/document-list.component";
 import {DocumentDetailComponent} from "./document-detail/document-detail.component";
 import { Documents } from './documents.model';
 import {NgIf} from "@angular/common";
+import {DocumentService} from "./document.service";
 
 @Component({
   selector: 'app-documents',
@@ -16,9 +17,13 @@ import {NgIf} from "@angular/common";
   styleUrl: './documents.component.css'
 })
 export class DocumentsComponent {
-  selectedDocument!: Documents;
+  selectedDocument!: Documents | null;
 
-  onDocumentSelected(document: Documents) {
-    this.selectedDocument = document;
+  constructor(private documentService: DocumentService) { }
+
+  ngOnInit() {
+    this.documentService.documentSelectedEvent.subscribe((selectedDocument: Documents) => {
+      this.selectedDocument = selectedDocument;
+    });
   }
 }
