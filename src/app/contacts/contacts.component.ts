@@ -4,6 +4,7 @@ import {ContactListComponent} from "./contact-list/contact-list.component";
 import {Contacts} from "./contacts.model";
 import { ContactService } from './contact.service';
 import {NgIf} from "@angular/common";
+import { RouterOutlet, RouterModule } from "@angular/router";
 
 @Component({
   selector: 'app-contacts',
@@ -11,7 +12,9 @@ import {NgIf} from "@angular/common";
   imports: [
     ContactDetailComponent,
     ContactListComponent,
-    NgIf
+    NgIf,
+    RouterOutlet,
+    RouterModule
   ],
   templateUrl: './contacts.component.html',
   styleUrl: './contacts.component.css'

@@ -4,6 +4,7 @@ import {DocumentDetailComponent} from "./document-detail/document-detail.compone
 import { Documents } from './documents.model';
 import {NgIf} from "@angular/common";
 import {DocumentService} from "./document.service";
+import {RouterOutlet} from "@angular/router";
 
 @Component({
   selector: 'app-documents',
@@ -11,7 +12,8 @@ import {DocumentService} from "./document.service";
   imports: [
     DocumentListComponent,
     DocumentDetailComponent,
-    NgIf
+    NgIf,
+    RouterOutlet
   ],
   templateUrl: './documents.component.html',
   styleUrl: './documents.component.css'

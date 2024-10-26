@@ -1,12 +1,13 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 import { Contacts } from '../contacts.model';
 import {ContactDetailComponent} from "../contact-detail/contact-detail.component";
 import { ContactService } from "../contact.service";
 //Video didn't have an import for this, so I sat here for an hour trying to figure out why my list wasn't
-//displaying..
+//displaying.
 import { NgFor } from '@angular/common';
 import {ContactItemComponent} from "../contact-item/contact-item.component";
+import {RouterLink} from "@angular/router";
 
 
 
@@ -16,7 +17,8 @@ import {ContactItemComponent} from "../contact-item/contact-item.component";
   imports: [
     ContactDetailComponent,
     NgFor,
-    ContactItemComponent
+    ContactItemComponent,
+    RouterLink
   ], //Hello
   templateUrl: 'contact-list.component.html',
   styleUrl: 'contact-list.component.css'
@@ -27,11 +29,10 @@ export class ContactListComponent implements OnInit {
   constructor(private contactService: ContactService) { }
 
   ngOnInit() {
-    this.contacts = this.contactService.getContacts();
-  }
+    this.contacts = this.contactService.contact;
 
-  onSelectContact(contact: Contacts): void {
-    this.contactService.selectedContactEvent.emit(contact);
+    this.contactService.contactChangedEvent.subscribe((contacts: Contacts[]) => {
+      this.contacts = contacts;
+    })
   }
-
 }

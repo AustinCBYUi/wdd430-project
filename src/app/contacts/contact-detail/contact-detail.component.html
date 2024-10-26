@@ -9,26 +9,22 @@
       <div class="panel-heading">
         <span class="pull-left">
           <h2>Contact Details</h2>
-          <h4><b>{{ contact.name }}</b></h4>
+          <h4><b>{{ contact?.name }}</b></h4>
           <img
-          [src]="contact.imageUrl"
-          alt="{{ contact.name }}"
+          [src]="contact?.imageUrl"
+          alt="{{ contact?.name }}"
           class="img-responsive"
           style="max-height: 120px;">
         </span>
           <div class="btn-group-justified">
           <span class="pull-right">
-            <a href="#" style="text-decoration: none">
-              <button type="button" class="btn btn-danger">
+            <a (click)="onDelete()" class="btn btn-danger">
                 Delete
-              </button>
             </a>
           </span>
           <span class="pull-right">
-            <a href="#" style="text-decoration: none">
-              <button type="button" class="btn btn-primary">
+            <a [routerLink]="['/contacts', contact?.id, 'edit']" class="btn btn-warning">
                 Edit
-              </button>
             </a>
           </span>
         </div>
@@ -36,12 +32,12 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-xs-12">
-            <b>Email:</b> {{ contact.email }}
+            <b>Email:</b> {{ contact?.email }}
           </div>
         </div>
         <div class="row">
           <div class="col-xs-12">
-            <b>Phone:</b> {{ contact.phone }}
+            <b>Phone:</b> {{ contact?.phone }}
           </div>
         </div>
       </div>

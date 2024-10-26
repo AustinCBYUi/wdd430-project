@@ -5,7 +5,7 @@
         <h2>Contacts</h2>
       </div>
       <div class="pull-right">
-        <button class="btn btn-success">New Contact</button>
+        <a [routerLink]="['/contacts', 'new']" class="btn btn-success">New Contact</a>
       </div>
     </div>
   </div>
@@ -13,9 +13,6 @@
 <div class="row">
   <div class="col-xs-12">
       <app-contact-item
-      *ngFor="let contactElement of contacts"
-      [contact]="contactElement"
-      (click)="onSelectContact(contactElement)"
-      (contactSelected)="onSelectContact(contactElement)"></app-contact-item>
+      *ngFor="let contactElement of contacts" [contact]="contactElement"></app-contact-item>
   </div>
 </div>

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {RouterModule, RouterOutlet} from '@angular/router';
 import {ContactDetailComponent} from "./contacts/contact-detail/contact-detail.component";
 import {ContactsComponent} from "./contacts/contacts.component";
 import {ContactListComponent} from "./contacts/contact-list/contact-list.component";
@@ -11,16 +11,20 @@ import {NgIf} from "@angular/common";
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, ContactDetailComponent, ContactsComponent, ContactListComponent, HeaderComponent, DocumentsComponent, MessageListComponent, NgIf],
+  imports: [
+    RouterOutlet,
+    ContactDetailComponent,
+    ContactsComponent,
+    ContactListComponent,
+    HeaderComponent,
+    DocumentsComponent,
+    MessageListComponent,
+    NgIf,
+    RouterModule,
+    RouterOutlet
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'wdd430-project';
-
-  loadedFeature = 'contact';
-
-  switchView(selectedFeature: string) {
-    this.loadedFeature = selectedFeature;
-  }
 }
