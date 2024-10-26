@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {DocumentItemComponent} from "../document-item/document-item.component";
 import { Documents } from '../documents.model';
 import {NgForOf} from "@angular/common";

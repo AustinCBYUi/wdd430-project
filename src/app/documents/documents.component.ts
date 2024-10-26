@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {DocumentListComponent} from "./document-list/document-list.component";
 import {DocumentDetailComponent} from "./document-detail/document-detail.component";
 import { Documents } from './documents.model';
