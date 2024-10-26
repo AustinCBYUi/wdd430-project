@@ -8,11 +8,6 @@
   <div class="panel-body">
     <div class="center-panel">
       <app-document-item *ngFor="let documents of document" [document]="documents"></app-document-item>
-      <div *ngFor="let documents of document" class="document-item">
-        <h4>{{ documents.name }}</h4>
-        <a [routerLink]="['/documents', documents.id]">View Details</a>
-        <a [routerLink]="['/documents/edit', documents.id]">Edit</a>
-      </div>
     </div>
   </div>
 </div>
