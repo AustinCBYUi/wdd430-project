@@ -1,13 +1,14 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { Contacts } from '../contacts.model';
-import {ContactDetailComponent} from "../contact-detail/contact-detail.component";
+import { ContactDetailComponent } from "../contact-detail/contact-detail.component";
 import { ContactService } from "../contact.service";
 //Video didn't have an import for this, so I sat here for an hour trying to figure out why my list wasn't
 //displaying.
 import { NgFor } from '@angular/common';
-import {ContactItemComponent} from "../contact-item/contact-item.component";
-import {RouterLink} from "@angular/router";
+import { ContactItemComponent } from "../contact-item/contact-item.component";
+import { RouterLink } from "@angular/router";
+import {Subscription} from "rxjs";
 
 
 
@@ -23,16 +24,21 @@ import {RouterLink} from "@angular/router";
   templateUrl: 'contact-list.component.html',
   styleUrl: 'contact-list.component.css'
 })
-export class ContactListComponent implements OnInit {
+export class ContactListComponent implements OnInit, OnDestroy {
   contacts: Contacts[] = [];
+  subscription!: Subscription;
 
-  constructor(private contactService: ContactService) { }
+  constructor(private contactService: ContactService) {
+    this.contacts = this.contactService.getContacts();
+  }
 
   ngOnInit() {
-    this.contacts = this.contactService.contact;
+    this.subscription = this.contactService.contactListChangedEvent.subscribe((contactsList: Contacts[]) => {
+      this.contacts = contactsList;
+    });
+  }
 
-    this.contactService.contactChangedEvent.subscribe((contacts: Contacts[]) => {
-      this.contacts = contacts;
-    })
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }
