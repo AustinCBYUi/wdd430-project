@@ -48,7 +48,7 @@ export class ContactService {
     if (!contact) { return; }
 
     const index = this.contact.indexOf(contact);
-    if (index > -1) { return; }
+    if (index < 0) { return; }
 
     this.contact.splice(index, 1);
 
