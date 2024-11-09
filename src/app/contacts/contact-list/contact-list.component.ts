@@ -9,6 +9,7 @@ import { NgFor } from '@angular/common';
 import { ContactItemComponent } from "../contact-item/contact-item.component";
 import { RouterLink } from "@angular/router";
 import {Subscription} from "rxjs";
+import {CdkDrag} from "@angular/cdk/drag-drop";
 
 
 
@@ -19,7 +20,8 @@ import {Subscription} from "rxjs";
     ContactDetailComponent,
     NgFor,
     ContactItemComponent,
-    RouterLink
+    RouterLink,
+    CdkDrag
   ], //Hello
   templateUrl: 'contact-list.component.html',
   styleUrl: 'contact-list.component.css'

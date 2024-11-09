@@ -2,16 +2,22 @@ import { Component, OnInit } from '@angular/core';
 import { Documents } from "../documents.model";
 import { DocumentService } from "../document.service";
 import { ActivatedRoute, Router } from "@angular/router";
+import {FormsModule, NgForm} from "@angular/forms";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-document-edit',
   standalone: true,
-  imports: [],
+  imports: [
+    FormsModule,
+    NgIf
+  ],
   templateUrl: './document-edit.component.html',
   styleUrl: './document-edit.component.css'
 })
-export class DocumentEditComponent {
-  document!: Documents | null;
+export class DocumentEditComponent implements OnInit {
+  document: Documents = { id: '', name: '', description: '', url: '', children: [] };
+  originalDocument: Documents | null = null;
   isInEdit: boolean = false;
 
   constructor(
@@ -21,11 +27,53 @@ export class DocumentEditComponent {
   ) {}
 
   ngOnInit() {
-    const id = this.route.snapshot.params['id'];
-    if (id) {
-      this.document = this.documentService.getDocument(id);
-      this.isInEdit = !!this.document;
+    this.route.params.subscribe(params => {
+      const id = params['id'];
+      if (!id) {
+        this.isInEdit = false;
+        return;
+      }
+      this.originalDocument = this.documentService.getDocument(id);
+      if (!this.originalDocument) {
+        return;
+      }
+      this.isInEdit = true;
+      this.document = JSON.parse(JSON.stringify(this.originalDocument));
+    });
+  }
+
+  onSubmit(form: NgForm) {
+    const formValues = form.value;
+
+    const newDocument = new Documents(
+      this.document.id,
+      formValues.name,
+      formValues.description,
+      formValues.url,
+      []
+    );
+
+    if (this.isInEdit) {
+      if (this.originalDocument) {
+        this.documentService.updateDocument(this.originalDocument, newDocument)
+      }
+    } else {
+      this.documentService.addDocument(newDocument);
     }
+
+    this.router.navigate(['/documents']).then(() => {
+      console.log("Document submitted");
+    });
+
+    if (form.invalid) return;
+
+    form.resetForm();
+  }
+
+  onCancel(): void {
+    this.router.navigate(['/documents']).then(() => {
+      console.log("Cancelled");
+    });
   }
 
   onSaveDocument() {

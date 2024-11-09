@@ -1,5 +1,5 @@
 export class Contacts {
-  public id: string;
+  public id: string = Math.random().toString(36).slice(2, 8);
   public name: string;
   public email: string;
   public phone: string;

@@ -7,6 +7,7 @@ import {HeaderComponent} from "./header.component";
 import {DocumentsComponent} from "./documents/documents.component";
 import {MessageListComponent} from "./messages/message-list/message-list.component";
 import {NgIf} from "@angular/common";
+import { DragDropModule } from "@angular/cdk/drag-drop";
 
 @Component({
   selector: 'app-root',
@@ -21,7 +22,8 @@ import {NgIf} from "@angular/common";
     MessageListComponent,
     NgIf,
     RouterModule,
-    RouterOutlet
+    RouterOutlet,
+    DragDropModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
