@@ -10,6 +10,7 @@ import { ContactItemComponent } from "../contact-item/contact-item.component";
 import { RouterLink } from "@angular/router";
 import {Subscription} from "rxjs";
 import {CdkDrag} from "@angular/cdk/drag-drop";
+import {ContactsFilterPipe} from "../contacts-filter.pipe";
 
 
 
@@ -21,7 +22,8 @@ import {CdkDrag} from "@angular/cdk/drag-drop";
     NgFor,
     ContactItemComponent,
     RouterLink,
-    CdkDrag
+    CdkDrag,
+    ContactsFilterPipe
   ], //Hello
   templateUrl: 'contact-list.component.html',
   styleUrl: 'contact-list.component.css'
@@ -29,12 +31,17 @@ import {CdkDrag} from "@angular/cdk/drag-drop";
 export class ContactListComponent implements OnInit, OnDestroy {
   contacts: Contacts[] = [];
   subscription!: Subscription;
+  term: string = '';
 
   constructor(private contactService: ContactService) {
-    this.contacts = this.contactService.getContacts();
+  }
+
+  search(value: string) {
+    this.term = value;
   }
 
   ngOnInit() {
+    this.contactService.getContacts();
     this.subscription = this.contactService.contactListChangedEvent.subscribe((contactsList: Contacts[]) => {
       this.contacts = contactsList;
     });

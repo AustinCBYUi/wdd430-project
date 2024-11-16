@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, NgModule} from '@angular/core';
 import {RouterModule, RouterOutlet} from '@angular/router';
 import {ContactDetailComponent} from "./contacts/contact-detail/contact-detail.component";
 import {ContactsComponent} from "./contacts/contacts.component";
@@ -8,6 +8,7 @@ import {DocumentsComponent} from "./documents/documents.component";
 import {MessageListComponent} from "./messages/message-list/message-list.component";
 import {NgIf} from "@angular/common";
 import { DragDropModule } from "@angular/cdk/drag-drop";
+import { HttpClientModule } from "@angular/common/http";
 
 @Component({
   selector: 'app-root',
@@ -24,6 +25,7 @@ import { DragDropModule } from "@angular/cdk/drag-drop";
     RouterModule,
     RouterOutlet,
     DragDropModule,
+    HttpClientModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
