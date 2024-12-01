@@ -5,7 +5,7 @@ const Message = require('../models/message');
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
-  Message.find()
+  Message.find().populate("messages")
     .then(messages => {
       res.status(200).json({
         message: 'Messages fetched successfully.',
@@ -23,7 +23,7 @@ router.get('/', (req, res, next) => {
 
 
 //POST
-router.post('/', (req, res, next) => {
+router.post('/new', (req, res, next) => {
   const maxMessageId = sequenceGenerator.nextId('messages');
 
   const message = new Message({

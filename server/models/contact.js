@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const contactSchema = mongoose.Schema({
+const contactSchema = new mongoose.Schema({
   id: { type: String, unique: true, required: true },
   name: { type: String, required: true },
   email: { type: String, required: true },
@@ -9,4 +9,4 @@ const contactSchema = mongoose.Schema({
   group: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Contact' }],
 });
 
-module.exports = mongoose.model('contacts', contactSchema);
+module.exports = mongoose.model('Contact', contactSchema);

@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get('/', async (req, res, next) => {
   try {
-    const contacts = await Contact.find().populate('group');
+    const contacts = await Contact.find({}).populate('group');
     res.status(200).json({
       message: 'Contacts fetched successfully.',
       contacts: contacts,

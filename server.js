@@ -9,9 +9,9 @@ let mongoose = require('mongoose');
 require('dotenv').config();
 
 //Live DB
-// let mongoURI = process.env.MONGO_URI;
-//Local
 let mongoURI = process.env.MONGO_URI;
+//Local
+// let mongoURI = process.env.MONGO_URI;
 
 // import the routing file to handle the default (index) route
 let index = require('./server/routes/app');

@@ -4,7 +4,7 @@ const Document = require('../models/document');
 const router = express.Router();
 
 router.get('/', async (req, res, next) => {
-  Document.find()
+  Document.find({})
     .then(documents => {
       res.status(200).json({
         message: 'Documents fetched successfully.',
