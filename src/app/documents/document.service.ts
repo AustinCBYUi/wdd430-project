@@ -2,13 +2,14 @@ import {EventEmitter, inject, Injectable} from '@angular/core';
 import {Documents} from "./documents.model";
 import {BehaviorSubject, Subject} from "rxjs";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {response} from "express";
 
 @Injectable({
   providedIn: 'root'
 })
 export class DocumentService {
   document: Documents[] = [];
-  documentsUrl = `https://abccms-95881-default-rtdb.firebaseio.com/documents.json`;
+  documentsUrl = 'http://localhost:3000/documents'; //`https://abccms-95881-default-rtdb.firebaseio.com/documents.json`;
   documentSelectedEvent = new EventEmitter<Documents>();
   documentChangedEvent = new BehaviorSubject<Documents[]>([]);
   documentListChangedEvent = new Subject<Documents[]>();
@@ -22,7 +23,7 @@ export class DocumentService {
   }
 
 
-  getDocuments() {
+  async getDocuments() {
     this.http.get<Documents[]>(this.documentsUrl)
       .subscribe({
         next: (response) => {
@@ -58,16 +59,28 @@ export class DocumentService {
   }
 
 
-  addDocument(newDocument: Documents) {
+  async addDocument(newDocument: Documents) {
     if (!newDocument) {
       return;
     }
 
-    this.maxDocumentId++;
-    newDocument.id = this.maxDocumentId.toString();
+    newDocument.id = '';
 
-    this.document.push(newDocument);
-    this.storeDocuments();
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    this.http.post<{ message: String, document: Documents }>(this.documentsUrl, newDocument, { headers: headers })
+      .subscribe(
+        response => {
+          this.document.push(response.document);
+          this.sortSend();
+        }
+      );
+
+    // this.maxDocumentId++;
+    // newDocument.id = this.maxDocumentId.toString();
+    //
+    // this.document.push(newDocument);
+    // this.storeDocuments();
 
     // const documentsListClone = this.document.slice();
     // this.documentListChangedEvent.next(documentsListClone);
@@ -86,8 +99,21 @@ export class DocumentService {
 
     newDocument.id = originalDocument.id;
 
-    this.document[position] = newDocument;
-    this.storeDocuments();
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    this.http.put(this.documentsUrl, newDocument, { headers: headers })
+    .subscribe({
+      next: () => {
+        this.document[position] = newDocument;
+        this.sortSend();
+      },
+      error: (err) => console.error('Error updating document: ', err)
+    });
+
+    // newDocument.id = originalDocument.id;
+    //
+    // this.document[position] = newDocument;
+    // this.storeDocuments();
 
     // const documentsListClone = this.document.slice();
     // this.documentListChangedEvent.next(documentsListClone);
@@ -99,13 +125,24 @@ export class DocumentService {
       return;
     }
 
-    const position = this.document.indexOf(document);
-    if (position < 0) {
-      return;
-    }
+    const documentId = document.id;
 
-    this.document.splice(position, 1);
-    this.storeDocuments();
+    this.http.delete(this.documentsUrl + documentId)
+      .subscribe({
+        next: () => {
+          this.document = this.document.filter(d => d.id !== documentId);
+          this.sortSend();
+        },
+        error: (err) => console.error('Error deleting document: ', err)
+      });
+
+    // const position = this.document.indexOf(document);
+    // if (position < 0) {
+    //   return;
+    // }
+    //
+    // this.document.splice(position, 1);
+    // this.storeDocuments();
 
     // const documentsListClone = this.document.slice();
     // this.documentListChangedEvent.next(documentsListClone);

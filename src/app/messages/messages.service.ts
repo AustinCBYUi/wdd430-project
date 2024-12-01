@@ -57,11 +57,60 @@ export class MessagesService {
     return this.messages.find(message => message.id === id) || null;
   }
 
-  addMessage(message: Message): void {
-    this.maxMessageId = this.getMaxId();
-    this.messages.push(message);
-    this.storeMessages();
+  addMessage(newMessage: Message): void {
+    if (!newMessage) {
+      return;
+    }
+
+    newMessage.id = '';
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    this.http.post<Message>(this.messagesUrl, newMessage, { headers: headers })
+      .subscribe({
+        next: (message) => {
+          this.messages.push(message);
+          this.sortMessages();
+        }
+      })
+
+    // this.maxMessageId = this.getMaxId();
+    // this.messages.push(message);
+    // this.storeMessages();
     // this.messageListChangedEvent.next(this.messages.slice());
+  }
+
+
+  updateMessage(originalMessage: Message, updatedMessage: Message) {
+    if (!originalMessage || !updatedMessage) return;
+
+    updatedMessage.id = originalMessage.id;
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    this.http.put(this.messagesUrl + originalMessage.id, updatedMessage, { headers: headers })
+      .subscribe({
+        next: () => {
+          const index = this.messages.findIndex(m => m.id === originalMessage.id);
+          if (index >= 0) this.messages[index] = updatedMessage;
+          this.sortMessages();
+        }
+      })
+  }
+
+
+  deleteMessage(message: Message) {
+    if (!message) return;
+
+    const messageId = message.id;
+
+    this.http.delete(this.messagesUrl + messageId)
+      .subscribe({
+        next: () => {
+          this.messages = this.messages.filter(m => m.id !== messageId);
+          this.sortMessages();
+        }
+      })
   }
 
   getMaxId(): number {

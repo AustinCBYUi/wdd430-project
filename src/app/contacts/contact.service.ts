@@ -38,26 +38,51 @@ export class ContactService {
 
 
   addContact(newContact: Contacts) {
-    if (!newContact) { return; }
+    if (!newContact) return;
 
-    this.maxContactId++;
-    newContact.id = this.maxContactId.toString();
-    this.contact.push(newContact);
-    this.storeContacts();
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    this.http.post<Contacts>(this.contactsUrl, newContact, { headers })
+      .subscribe({
+        next: (contact) => {
+          this.contact.push(contact);
+          this.sortContacts();
+        },
+        error: (err) => console.error('Error adding contact:', err)
+      });
+
+    // this.maxContactId++;
+    // newContact.id = this.maxContactId.toString();
+    // this.contact.push(newContact);
+    // this.storeContacts();
 
     // const contactsListClone = this.contact.slice();
     // this.contactListChangedEvent.next(contactsListClone);
   }
 
   updateContact(originalContact: Contacts, newContact: Contacts) {
-    if (!originalContact || !newContact) { return; }
-
-    const position = this.contact.indexOf(originalContact);
-    if (position < 0) { return; }
+    if (!originalContact || !newContact) return;
 
     newContact.id = originalContact.id;
-    this.contact[position] = newContact;
-    this.storeContacts();
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    this.http.put(this.contactsUrl + newContact.id, newContact, { headers })
+      .subscribe({
+        next: () => {
+          const index = this.contact.findIndex(c => c.id === newContact.id);
+          if (index >= 0) this.contact[index] = newContact;
+          this.sortContacts();
+        },
+        error: (err) => console.error('Error updating contact:', err)
+      });
+
+    // const position = this.contact.indexOf(originalContact);
+    // if (position < 0) { return; }
+    //
+    // newContact.id = originalContact.id;
+    // this.contact[position] = newContact;
+    // this.storeContacts();
 
     // const contactsListClone = this.contact.slice();
     // this.contactListChangedEvent.next(contactsListClone);
@@ -65,13 +90,22 @@ export class ContactService {
 
 
   deleteContact(contact: Contacts) {
-    if (!contact) { return; }
+    if (!contact) return;
 
-    const index = this.contact.indexOf(contact);
-    if (index < 0) { return; }
+    this.http.delete(this.contactsUrl + contact.id)
+      .subscribe({
+        next: () => {
+          this.contact = this.contact.filter(c => c.id !== contact.id);
+          this.sortContacts();
+        },
+        error: (err) => console.error('Error deleting contact:', err)
+      });
 
-    this.contact.splice(index, 1);
-    this.storeContacts();
+    // const index = this.contact.indexOf(contact);
+    // if (index < 0) { return; }
+    //
+    // this.contact.splice(index, 1);
+    // this.storeContacts();
 
     // const contactsListClone = this.contact.slice();
     // this.contactListChangedEvent.next(contactsListClone);
